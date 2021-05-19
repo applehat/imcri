@@ -1,5 +1,5 @@
 {
-  "name": "in-memory-cache-rest-api",
+  "name": "imcri",
   "version": "1.0.0",
   "description": "Creates an in-memory cache interfaced by a REST api.",
   "main": "index.js",

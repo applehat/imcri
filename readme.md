@@ -13,6 +13,9 @@ If you find yourself in need of REST in node, a good starting point would be to 
 
 ## Usage
 
+First, make sure you have any node modules installed by running `npm i`.
+
+Then, just run the server with `npm start`
 
 ## Config
 
@@ -20,9 +23,11 @@ All configuration is handled in the `.env` file.
 
 | Config Variable | Type | Default | Description |
 |-----------------|------|---------|-------------|
+| `PORT`          | int  | 80    | Port for the REST API to listen on.
+| `DEBUG`         | bool | false    | Output debug messages to the console
 | `MEMORY_SLOTS`  | int  | 10000 | Maximum number of objects to be stored simultaneously in the server’s memory. If the server runs out of slots it will behave according to the Eviction Policy setting |
-| `MEMORY_TTL`     | int  | 3600 | Object’s default time-to-live value in seconds if no TTL is specified as part of a write request. If TTL is set to 0 that means store indefinitely (until an explicit DELETE request) |
-| `EVIC_POLICY` | enum | REJECT | This indicates what to do when the cache runs out of slots. Options are `OLDEST_FIRST`,`NEWEST_FIRST`, and `REJECT`
+| `MEMORY_TTL`    | int  | 3600 | Object’s default time-to-live value in seconds if no TTL is specified as part of a write request. If TTL is set to 0 that means store indefinitely (until an explicit DELETE request) |
+| `EVIC_POLICY`   | enum | REJECT | This indicates what to do when the cache runs out of slots. Options are `OLDEST_FIRST`,`NEWEST_FIRST`, and `REJECT`
 
 ### Evacuation Policy Breakdown
 - `OLDEST_FIRST`: If there are no slots available the cache will evict the oldest active object
@@ -45,6 +50,7 @@ This will insert the {object} provided in the body of the request into a slot in
 
 Returns
 - 200: If the server was able to store the object
+- 500: If the object provided is not valid JSON
 - 507: If the server has no storage
 
 ### DELETE /object/{key}
