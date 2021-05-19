@@ -1,0 +1,14 @@
+{
+  "name": "in-memory-cache-rest-api",
+  "version": "1.0.0",
+  "description": "Creates an in-memory cache interfaced by a REST api.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Cameron Chunn",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^9.0.2"
+  }
+}
