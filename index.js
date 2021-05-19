@@ -1,6 +1,5 @@
 require('dotenv').config()
 const http = require('http');
-//const URL = require('url');
 const cache = require('./cache');
 const PORT = process.env.PORT || 80;
 
@@ -52,7 +51,6 @@ const server = http.createServer((req, res) => {
                  */
                 try {
                     JSON.parse(data); // This will throw a catchable error if invalid JSON is passed.
-                    
                     if(cache.put(key, data, ttl)) {
                         // we did it!
                         res.writeHead(200, responseHeaders);
@@ -63,7 +61,6 @@ const server = http.createServer((req, res) => {
                         }));
                     }
                 } catch (e) {
-                    console.log(e);
                    res.writeHead(500, responseHeaders);
                    res.write(JSON.stringify({
                        error: `The object provided in the body of your request was not valid JSON.`
@@ -75,7 +72,7 @@ const server = http.createServer((req, res) => {
 
         // Delete Methpd
         if (req.method == 'DELETE') {
-            if (cache.delete(key)) {
+            if (cache.del(key)) {
                 res.writeHead(200, responseHeaders);
             } else {
                 res.writeHead(404, responseHeaders);
@@ -83,6 +80,7 @@ const server = http.createServer((req, res) => {
                     error: `The specified key was not found in the system.`
                 }));
             }
+            res.end();
         }
 
     } else {

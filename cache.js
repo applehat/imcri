@@ -15,14 +15,11 @@ class Cache {
      * @returns {bool} true if created, false if failure
      */
     put(key, data, ttl) {
-        let expires;
         if (!ttl) {
             // If ttl evaluates to false, set TTL to MEMORY_TTL unless its valua is actually meant to be 0.
-            expires = (ttl === 0) ? 0 : (parseInt(this.MEMORY_TTL) + this.curTime());
-        } else {
-            // Set the expiration timestamp to current time + ttl
-            expires = ttl + this.curTime();
-        }
+            ttl = !(ttl === 0) ? 0 : parseInt(this.MEMORY_TTL);
+        } 
+        let expires = ttl + this.curTime();
         this.debug('put',`TTL: ${ttl} -- Setting expiration for '${key}' to ${expires}. Current time is ${this.curTime()}`);
 
         let ableToStore = true;
@@ -62,6 +59,14 @@ class Cache {
                 expires: expires,
                 data: data
             }
+
+            if (ttl > 0) {
+                setTimeout(()=>{
+                    this.debug('Auto Expire',`TTL of ${ttl} seconds for key ${key} hit.`)
+                    this.isExpired(key); // Will verify expiration, and delete.
+                },ttl * 1000)
+            }
+
             return true;
         } else {
             return false;
@@ -93,9 +98,10 @@ class Cache {
         if (this.hasKey(key)) {
             this.debug('delete',`Key '${key}' exists`);
             if (this.isExpired(key)) {
-                this.debug('delete',`Key '${key}' was expired and removed, can't delete.`);
+                this.debug('delete',`Key '${key}' was expired and removed.`);
                 return false;
             }
+            delete this.storage[key];
             this.debug('delete',`Key '${key}' was deleted.`);
             return true;
         } else {
